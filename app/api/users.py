@@ -231,8 +231,10 @@ def get_followeds(id):
         res = db.engine.execute(
             "select * from followers where follower_id={} and followed_id={}".
             format(user.id, item['id']))
-        item['timestamp'] = datetime.strptime(
-            list(res)[0][2], '%Y-%m-%d %H:%M:%S.%f')
+        item['timestamp'] = list(res)[0][2]
+        # list(res)[0][2] 本身就是datetime
+        # item['timestamp'] = datetime.strptime(
+        #     list(res)[0][2], '%Y-%m-%d %H:%M:%S.%f')
     # 按 timestamp 排序一个字典列表(倒序，最新关注的人在最前面)
     data['items'] = sorted(data['items'], key=itemgetter('timestamp'), reverse=True)
     return jsonify(data)
@@ -257,8 +259,9 @@ def get_followers(id):
         res = db.engine.execute(
             "select * from followers where follower_id={} and followed_id={}".
             format(item['id'], user.id))
-        item['timestamp'] = datetime.strptime(
-            list(res)[0][2], '%Y-%m-%d %H:%M:%S.%f')
+        item['timestamp'] = list(res)[0][2]
+        # item['timestamp'] = datetime.strptime(
+        #     list(res)[0][2], '%Y-%m-%d %H:%M:%S.%f')
     # 按 timestamp 排序一个字典列表(倒序，最新的粉丝在最前面)
     data['items'] = sorted(data['items'], key=itemgetter('timestamp'), reverse=True)
     # 标记哪些粉丝是新的
@@ -427,7 +430,8 @@ def get_user_recived_comments_likes(id):
                 data['comment'] = c.to_dict()
                 # 获取点赞时间
                 res = db.engine.execute("select * from comments_likes where user_id={} and comment_id={}".format(u.id, c.id))
-                data['timestamp'] = datetime.strptime(list(res)[0][2], '%Y-%m-%d %H:%M:%S.%f')
+                data['timestamp'] = list(res)[0][2]
+                # data['timestamp'] = datetime.strptime(list(res)[0][2], '%Y-%m-%d %H:%M:%S.%f')
                 # 标记本条点赞记录是否为新的
                 last_read_time = user.last_comments_likes_read_time or datetime(1900, 1, 1)
                 if data['timestamp'] > last_read_time:
@@ -480,7 +484,8 @@ def get_user_recived_posts_likes(id):
                 data['post'] = p.to_dict()
                 # 获取喜欢时间
                 res = db.engine.execute("select * from posts_likes where user_id={} and post_id={}".format(u.id, p.id))
-                data['timestamp'] = datetime.strptime(list(res)[0][2], '%Y-%m-%d %H:%M:%S.%f')
+                data['timestamp'] = list(res)[0][2]
+                # data['timestamp'] = datetime.strptime(list(res)[0][2], '%Y-%m-%d %H:%M:%S.%f')
                 # 标记本条喜欢记录是否为新的
                 last_read_time = user.last_posts_likes_read_time or datetime(1900, 1, 1)
                 if data['timestamp'] > last_read_time:
