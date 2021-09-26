@@ -5,7 +5,7 @@ from app.api import bp
 @bp.route('/ping', methods=['GET'])
 def ping():
     '''前端Vue.js用来测试与后端Flask API的连通性'''
-    return jsonify('Pong!')
+    return jsonify('You know, I Know!')
 
 
 @bp.route('/test-email', methods=['GET'])

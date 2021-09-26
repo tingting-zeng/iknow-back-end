@@ -18,9 +18,15 @@ def add_to_index(index, obj):
             "search_analyzer": "ik_max_word"
         }
 
+        english_field_config = {
+            "type": "text",
+            "analyzer": "standard",
+            "search_analyzer": "standard"
+        }
+
         properties = {}
         for field, _ in obj.__searchable__:
-            properties[field] = chinese_field_config
+            properties[field] = english_field_config
 
         mapping = {
             "properties": properties
@@ -56,8 +62,13 @@ def query_index(index, query, page, per_page, ids=None):
         return 0, [], ''
 
     # 中文分词器 ik 会将 query 拆分成哪些查找关键字，前端将通过正则表达式来高亮这些词
-    analyze_body = {
+    '''analyze_body = {
         "analyzer": "ik_max_word",
+        "text": query
+    }'''
+
+    analyze_body = {
+        "analyzer": "standard",
         "text": query
     }
     tokens = current_app.elasticsearch.indices.analyze(index=index, body=analyze_body)
